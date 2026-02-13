@@ -23,7 +23,7 @@ const Team = () => {
 
     const fetchTeamData = async () => {
          try {
-            const { data } = await axios.get('http://localhost:5000/api/attendance/live-status', {
+            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/attendance/live-status`, {
                 withCredentials: true
             });
             setTeamData(data);
@@ -68,7 +68,7 @@ const Team = () => {
 
         try {
             const endpoint = actionType === 'checkIn' ? 'check-in' : 'check-out';
-            await axios.post(`http://localhost:5000/api/attendance/${endpoint}`, {
+            await axios.post(`${import.meta.env.VITE_API_URL}/attendance/${endpoint}`, {
                 userId: selectedMember.userId._id,
                 manualTime: manualTime ? new Date(manualTime) : new Date(),
                 reason: reason || `Admin manual ${actionType === 'checkIn' ? 'Check-in' : 'Check-out'}`,
@@ -89,7 +89,7 @@ const Team = () => {
     const fetchMemberHistory = async (userId) => {
         setHistoryLoading(true);
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/attendance/history/${userId}`, {
+            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/attendance/history/${userId}`, {
                 withCredentials: true
             });
             setMemberHistory(data);
@@ -104,7 +104,7 @@ const Team = () => {
         setActionLoading(true);
         setError('');
         try {
-            await axios.put(`http://localhost:5000/api/users/${selectedMember.userId._id}`, editForm, {
+            await axios.put(`${import.meta.env.VITE_API_URL}/users/${selectedMember.userId._id}`, editForm, {
                 withCredentials: true
             });
             await fetchTeamData();
@@ -141,7 +141,7 @@ const Team = () => {
          }
          setActionLoading(true);
          try {
-             await axios.post('http://localhost:5000/api/attendance/approve-session', {
+             await axios.post(`${import.meta.env.VITE_API_URL}/attendance/approve-session`, {
                  attendanceId: selectedMember.attendanceId,
                  sessionId: selectedMember.sessionId
              }, { withCredentials: true });
@@ -156,7 +156,7 @@ const Team = () => {
 
     const handleExport = async () => {
         try {
-            const { data } = await axios.get('http://localhost:5000/api/attendance/history-range', {
+            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/attendance/history-range`, {
                 withCredentials: true
             });
             
@@ -216,7 +216,7 @@ const Team = () => {
         if (!newPassword) return;
         setActionLoading(true);
         try {
-             await axios.put(`http://localhost:5000/api/users/${selectedMember.userId._id}/password`, { password: newPassword }, {
+             await axios.put(`${import.meta.env.VITE_API_URL}/users/${selectedMember.userId._id}/password`, { password: newPassword }, {
                  withCredentials: true
              });
              setNewPassword('');

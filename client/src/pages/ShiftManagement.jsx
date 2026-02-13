@@ -21,7 +21,7 @@ const ShiftManagement = () => {
 
     const fetchUsers = async () => {
         try {
-            const { data } = await axios.get('http://localhost:5000/api/users', { withCredentials: true });
+            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/users`, { withCredentials: true });
             setUsers(data);
             if (data.length > 0) setFormData(prev => ({ ...prev, userId: data[0]._id }));
         } catch (error) {
@@ -31,7 +31,7 @@ const ShiftManagement = () => {
 
     const fetchShifts = async () => {
         try {
-            const { data } = await axios.get('http://localhost:5000/api/shifts/team', { withCredentials: true });
+            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/shifts/team`, { withCredentials: true });
             setShifts(data);
         } catch (error) {
             console.error(error);
@@ -41,7 +41,7 @@ const ShiftManagement = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5000/api/shifts', formData, { withCredentials: true });
+            await axios.post(`${import.meta.env.VITE_API_URL}/shifts`, formData, { withCredentials: true });
             setMsg('Shift assigned successfully');
             fetchShifts();
             setTimeout(() => setMsg(''), 3000);

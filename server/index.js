@@ -16,7 +16,11 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(express.json());
 app.use(cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173', // Frontend URL
+    origin: [
+        'http://localhost:5173',
+        'https://attendance.buildwarehub.com',
+        process.env.CLIENT_URL
+    ],
     credentials: true
 }));
 app.use(cookieParser());

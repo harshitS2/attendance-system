@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkUserLoggedIn = async () => {
       try {
-        const { data } = await axios.get('http://localhost:5000/api/auth/profile', { withCredentials: true });
+        const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/auth/profile`, { withCredentials: true });
         setUser(data);
       } catch (error) {
         setUser(null);
@@ -23,20 +23,20 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const { data } = await axios.post('http://localhost:5000/api/auth/login', { email, password }, { withCredentials: true });
+    const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, { email, password }, { withCredentials: true });
     setUser(data);
     return data;
   };
 
   const register = async (userData) => {
-    const { data } = await axios.post('http://localhost:5000/api/auth/register', userData, { withCredentials: true });
+    const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/auth/register`, userData, { withCredentials: true });
     setUser(data);
     return data;
   };
 
   const logout = async () => {
     try {
-      await axios.post('http://localhost:5000/api/auth/logout', {}, { withCredentials: true });
+      await axios.post(`${import.meta.env.VITE_API_URL}/auth/logout`, {}, { withCredentials: true });
     } catch (error) {
       console.error('Logout failed on server', error);
     } finally {

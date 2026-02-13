@@ -21,7 +21,7 @@ const History = () => {
 
     const fetchHistory = async () => {
         try {
-            const { data } = await axios.get('http://localhost:5000/api/attendance/history-range', {
+            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/attendance/history-range`, {
                 withCredentials: true
             });
             setHistory(data);

@@ -10,7 +10,7 @@ const Admin = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const { data } = await axios.get('http://localhost:5000/api/users', { withCredentials: true });
+                const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/users`, { withCredentials: true });
                 setUsers(data);
             } catch (error) {
                 console.error(error);
@@ -21,7 +21,7 @@ const Admin = () => {
 
     const handleRoleChange = async (id, newRole) => {
         try {
-            await axios.put(`http://localhost:5000/api/users/${id}/role`, { role: newRole }, { withCredentials: true });
+            await axios.put(`${import.meta.env.VITE_API_URL}/users/${id}/role`, { role: newRole }, { withCredentials: true });
             setUsers(users.map(u => u._id === id ? { ...u, role: newRole } : u));
             setMsg('Role updated successfully');
             setTimeout(() => setMsg(''), 3000);

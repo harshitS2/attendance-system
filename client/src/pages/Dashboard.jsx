@@ -24,12 +24,12 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const statusRes = await axios.get('http://localhost:5000/api/attendance/status', {
+                const statusRes = await axios.get(`${import.meta.env.VITE_API_URL}/attendance/status`, {
                     withCredentials: true 
                 });
                 setAttendance(statusRes.data);
 
-                const historyRes = await axios.get('http://localhost:5000/api/attendance/history', {
+                const historyRes = await axios.get(`${import.meta.env.VITE_API_URL}/attendance/history`, {
                     withCredentials: true
                 });
                 setHistory(historyRes.data);
@@ -130,7 +130,7 @@ const Dashboard = () => {
         setError('');
         try {
             const location = await getLocation();
-            const { data } = await axios.post('http://localhost:5000/api/attendance/check-in', {
+            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/attendance/check-in`, {
                 location,
                 reason: reason || 'Standard Check-in' 
             }, { withCredentials: true });
@@ -140,7 +140,7 @@ const Dashboard = () => {
             
             // Refresh history immediately to show the new 'At Work' status if needed, 
             // though usually history shows *completed* days or summarized days.
-            const historyRes = await axios.get('http://localhost:5000/api/attendance/history', {
+            const historyRes = await axios.get(`${import.meta.env.VITE_API_URL}/attendance/history`, {
                  withCredentials: true
             });
             setHistory(historyRes.data);
@@ -163,14 +163,14 @@ const Dashboard = () => {
         setError('');
         try {
             const location = await getLocation();
-            const { data } = await axios.post('http://localhost:5000/api/attendance/check-out', {
+            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/attendance/check-out`, {
                 location,
                  reason: reason || 'Standard Check-out'
             }, { withCredentials: true });
             
             setAttendance(data);
             setReason(''); // Clear reason after success
-             const historyRes = await axios.get('http://localhost:5000/api/attendance/history', {
+             const historyRes = await axios.get(`${import.meta.env.VITE_API_URL}/attendance/history`, {
                  withCredentials: true
             });
             setHistory(historyRes.data);
@@ -315,7 +315,7 @@ const Dashboard = () => {
                          <button 
                             onClick={async () => {
                                 try {
-                                    const { data } = await axios.get('http://localhost:5000/api/attendance/history-range', { withCredentials: true });
+                                    const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/attendance/history-range`, { withCredentials: true });
                                     
                                     const exportData = data.map(record => ({
                                         "Date": new Date(record.date).toLocaleDateString(),
