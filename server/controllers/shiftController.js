@@ -34,6 +34,50 @@ const assignShift = async (req, res) => {
     }
 };
 
+// @desc    Assign Weekly Shifts
+// @route   POST /api/shifts/weekly
+// @access  Private/TeamLead/Admin
+const assignWeeklyShifts = async (req, res) => {
+    const { userId, weekStartDate, shifts } = req.body; // shifts: [{ date, shiftType, startTime, endTime, isOff }]
+    const assignedBy = req.user._id;
+
+    try {
+        const userToAssign = await User.findById(userId);
+        if (!userToAssign) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const shiftPromises = shifts.map(async (dayShift) => {
+            if (dayShift.isOff) {
+                // Should we delete existing shift? or mark as Off? 
+                // For now, let's delete any existing shift for this date if marked as Off
+                await Shift.findOneAndDelete({ userId, effectiveDate: dayShift.date });
+                return null;
+            }
+
+            // Using findOneAndUpdate with upsert to create or replace
+            return Shift.findOneAndUpdate(
+                { userId, effectiveDate: dayShift.date },
+                {
+                    userId,
+                    assignedBy,
+                    shiftType: dayShift.shiftType,
+                    startTime: dayShift.startTime,
+                    endTime: dayShift.endTime,
+                    effectiveDate: dayShift.date
+                },
+                { new: true, upsert: true }
+            );
+        });
+
+        const results = await Promise.all(shiftPromises);
+        res.status(201).json({ message: 'Weekly shifts updated', count: results.filter(r => r).length });
+
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error', error: error.message });
+    }
+};
+
 // @desc    Get My Shifts
 // @route   GET /api/shifts/my
 // @access  Private
@@ -62,4 +106,4 @@ const getTeamShifts = async (req, res) => {
     }
 }
 
-export { assignShift, getMyShifts, getTeamShifts };
+export { assignShift, getMyShifts, getTeamShifts, assignWeeklyShifts };
